@@ -47,6 +47,9 @@ Due to aforementioned limitations, we want to propose a new format. Based on the
 
 We choose to use both formats as they can be converted between each other. For the purpose of illustrations below, we will only use YAML due to its advantage of being human-readable. If a software only supports NeXML, the YAML model file can be converted to this format before usage.
 
+> **NOTE**: The specification is currently under development. Syntax changes may be introduced until further notice.
+
+
 ### Data types
 
 Inspired by the Nexus format, the syntax for defining new data types looks like:
@@ -88,7 +91,7 @@ dataTypes:
     to: [ A, G, C ]
 ```
 
-See [sub-folder `datatypes`](datatypes) for specification of basic data types (e.g., DNA, protein, codon).
+See [a specification file for basic data types](datatypes/basicdata.yml) (e.g., DNA, protein, codon).
 
 ### Substitution models
 
