@@ -1,0 +1,39 @@
+########################################
+# Common DNA models in YAML format     #
+# Copyright (c) 2018 by Bui Quang Minh #
+########################################
+
+substitutionModels:
+
+### JC model ###
+- name: JC
+  fullName: Jukes-Cantor
+  citation: “Jukes and Cantor, 1969”
+  reversible: true
+  stateFrequency: [ 0.25, 0.25, 0.25, 0.25 ]
+  rateMatrix:
+  - [ -, 1, 1, 1 ]
+  - [ 1, -, 1, 1 ]
+  - [ 1, 1, -, 1 ]
+  - [ 1, 1, 1, - ]
+
+### GTR model ###
+- name: GTR
+  fullName: “General time reversible”
+  citation: “Tavare, 1986”
+  reversible: true
+  parameters:
+  - name: r[1..5]  # rate parameter vector r[1], ..., r[5]
+    range: [ 0.0001, 100 ]
+    initValue: 1.0
+  - name: f[1..4]  # frequency vector f[1],..., f[4]
+    type: frequency  # make parameters in range [0,1] and sum to 1.0
+
+  rateMatrix:
+  - [         -, r[1]*f[2], r[2]*f[3], r[3]*f[4] ]
+  - [ r[1]*f[1],         -, r[4]*f[3], r[5]*f[4] ]
+  - [ r[2]*f[1], r[4]*f[2],         -,      f[4] ]
+  - [ r[3]*f[1], r[5]*f[2],      f[3],         - ]
+
+  stateFrequency: [ f ]
+

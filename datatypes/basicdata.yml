@@ -1,0 +1,80 @@
+---
+##############################################
+#   definition of datatypes in YAML format   #
+#   Copyright (c) 2018 by Bui Quang Minh     #
+##############################################
+datatypes:
+
+### DNA data definition ###
+
+- name: Nucleotide
+  alias: [ NT, DNA, RNA ]
+  states: [ A, C, G, [ T, U ] ]  # T and U are the same
+  missing: [ N, ? ]
+  gap: [ - ]
+  equate:
+  - from: R
+    to: [A, G] # R is interpreted as A or G
+  - from: Y
+    to: [C, T]
+  - from: W
+    to: [A, T]
+  - from: S
+    to: [G, C]
+  - from: M
+    to: [A, C]
+  - from: K
+    to: [G, T]
+  - from: B
+    to: [C, G, T]
+  - from: H
+    to: [A, C, T]
+  - from: D
+    to: [A, G, T]
+  - from: V
+    to: [A, G, C]
+
+### Amino-acid data definition ###
+
+- name: AminoAcid
+  alias: [ AA, Protein ]
+  states: [ A, R, N, D, C, Q, E, G, H, I, L, K, M, F, P, S, T, W, Y, V ]
+  missing: [ X , ?, * ]
+  gap: [ - ]
+  equate:
+  - from: B
+    to: [ N, D ]
+  - from: Z
+    to: [ Q, E ]
+  - from: J
+    to: [ I, L ]
+
+### Binary (0/1) data ###
+
+- name: Binary
+  alias: [ BIN ]
+  states: [ 0, 1 ]
+  missing: [ ? ]
+  gap: [ - ]
+
+### Morphological data ###
+
+- name: Morphology
+  alias: [ MORPH, MultiState ]
+  states: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z ]
+
+
+### Codon data with standard genetic code ###
+
+- name: Codon
+  alias: [ Codon1 ]
+  states: [ $Nucleotide^3 ]
+  dropStates: [ TAA, TAG, TGA ]  # remove stop codons
+  nissing: [ ???, NNN ]
+  gap: [ --- ]
+  translate: [ ]
+  translateTo: AminoAcid
+
+- name: Codon2
+  copyFrom: Codon
+  translate: [ ]

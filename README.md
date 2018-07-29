@@ -7,7 +7,7 @@ Introduction
 
 Model-based phylogenetic analyses using maximum likelihood (ML) and Bayesian inference (BI) are commonly used nowadays to reconstruct evolutionary histories among organisms. With the advent of phylogenomic (e.g. multi-gene) data, simple models of sequence evolution are likely mis-specified. Such model misspecification may lead to systematic errors in phylogenetic inference. 
 
-Many (cool) complex and realistic models of sequence evolution have been introduced, including partition, mixture and covarion models. However, many remain by and large not applicable due to difficulty of implementation in widely used phylogenetic software. There exist "complicated" language such as HyPhy and RevBayes, which allow to specify complex models but require significant amount of learning. 
+Many complex and realistic models of sequence evolution have been introduced, including partition, mixture and covarion models. However, many of them remain by and large not applicable due to difficulty of implementation in widely used phylogenetic software. There exist "complicated" language such as HyPhy and RevBayes, which allow to specify complex models but require significant amount of learning. 
 
 This proposal aims to develop a specification format allowing users to easily define new phylogenetic models. Such format can be loaded and shared between different platforms and phylogenetic software. Thus, Thus, this take advantage of all machineries already available in ML/BI software such as model parameter estimation, tree search, bootstrapping. 
 
@@ -49,8 +49,102 @@ We choose to use both formats as they can be converted between each other. For t
 
 ### Data types
 
+Inspired by the Nexus format, the syntax for defining new data types looks like:
+
+```yaml
+---
+# definition of datatypes in YAML format
+dataTypes:
+- name:         # data type name
+  alias: [  ]   # vector of aliases for datatype name
+  states: [ ]   # vector of ordered states for the alphabet
+  missing: [ ]  # vector of states for missing character
+  gap: [ - ]    # gap symbols
+  equate:       # list of ambiguous characters
+  - from:       # source state
+    to: [  ]    # vector of mapped states
+        
+# next entry start with '- name: XXX'
+```
+
+Below is an example for defining DNA data:
+
+```yaml
+---
+dataTypes:
+#### definition for DNA data ###
+- name: Nucleotide
+  alias: [ NT, DNA, RNA ]
+  states: [ A, C, G, T ]
+  missing: [ N, ? ]
+  gap: [ - ]
+  equate:
+  - from: U
+    to: [ T ]
+  - from: R
+    to: [ A, G ]
+    .....
+  - from: V
+    to: [ A, G, C ]
+```
+
+See [sub-folder `datatypes`](datatypes) for specification of basic data types (e.g., DNA, protein, codon).
 
 ### Substitution models
+
+Next we define new models with the following basic syntax:
+
+```yaml
+# definition of models in YAML format
+substitutionModels:
+- name:         # model name string
+  fullName: ""  # full model name string
+  citation: ""  # citation string
+  numStates:    # number of states
+  reversible:   # boolean value (yes, true, no, false)
+
+  parameters:   # list of all parameters
+  - name:       # vector of parameter names
+    range:      # vector of 2 elements for lower and upper bound
+    initValue:  # initial values
+    type:       # type of parameter (examples below)
+  - name:       # another parameter names
+    ....
+
+  rateMatrix:   # specification for rate matrix Q
+  - [ q11, q12, q13 ]
+  - [ q21, q22, q23 ]
+  - [ q31, q32, q33 ]
+  stateFrequency: [ f1, f2, f3 ] # specification for state frequency vector
+```
+
+Examples for GTR model:
+
+```yaml
+substitutionModels:
+
+### GTR model ###
+- name: GTR
+  fullName: “General time reversible”
+  citation: “Tavare, 1986”
+  reversible: true
+  parameters:
+  - name: r[1..5]  # rate parameter vector r[1], ..., r[5]
+    range: [ 0.0001, 100 ]
+    initValue: 1.0
+  - name: f[1..4]  # frequency vector f[1],..., f[4]
+    type: frequency  # make parameters in range [0,1] and sum to 1.0
+
+  rateMatrix:
+  - [         -, r[1]*f[2], r[2]*f[3], r[3]*f[4] ]
+  - [ r[1]*f[1],         -, r[4]*f[3], r[5]*f[4] ]
+  - [ r[2]*f[1], r[4]*f[2],         -,      f[4] ]
+  - [ r[3]*f[1], r[5]*f[2],      f[3],         - ]
+
+  stateFrequency: [ f ]
+```
+
+See [sub-folder `substmodels`](substmodels) for definition of substitution models for DNA, protein, binary, morphological and codon.
 
 ### Mixture models
 
