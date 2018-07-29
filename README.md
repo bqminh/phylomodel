@@ -148,6 +148,49 @@ See [sub-folder `substmodels`](substmodels) for definition of substitution model
 
 ### Mixture models
 
+```yaml
+substitutionModels:
+
+- name: JC+GTR
+  parameters:
+  - name: w[1, 2]
+    type: weight # sum to 1.0
+  mixture:
+  - name: JC
+    weight: w[1]
+    scale: 1.0
+  - name: GTR
+    weight: w[2]
+    scale: 1.0
+```
 
 ### Covarion models
 
+```yaml
+substitutionModels:
+
+- name: COV_GTR
+  parameters:
+  - name: [ s0, s1 ] # switching rate
+    range: [ 0.0001, 100 ]
+  covarion:
+  - name: off
+    rateMatrix:
+    - [ -, 0, 0, 0 ]
+    - [ 0, -, 0, 0 ]
+    - [ 0, 0, -, 0 ]
+    - [ 0, 0, 0, - ]
+  - name: off2on
+    rateMatrix:
+    - [ s0,  0,  0,  0 ]
+    - [  0, s0,  0,  0 ]
+    - [  0,  0, s0,  0 ]
+    - [  0,  0,  0, s0 ]
+  - name: on2off
+    rateMatrix:
+    - [ s1,  0,  0,  0 ]
+    - [  0, s1,  0,  0 ]
+    - [  0,  0, s1,  0 ]
+    - [  0,  0,  0, s1 ]
+  - name: GTR
+```
