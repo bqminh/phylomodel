@@ -1,0 +1,98 @@
+---
+### Following models are prepared by Joe Bielawski ###
+
+substitutionModels:
+
+- name: BG02
+  description: strand symmetric DNA substitution model
+  citation: “Bielawski and Gold, 2002”
+  reversible: false
+  numStates: 4
+  order: [T, C, A, G]
+
+  parameters:
+  - name: [ c1, c2, x1, x2, x3, x4 ]
+    # c1: T->C = A->G (on A-strand)
+    # c2: C->T = G->A (on A-strand)
+    # x1: T->A = A->T
+    # x2: T->G = G->T
+    # x3: C->A = A->C
+    # x4: C->G = G->C
+    type: substitutionRate
+
+  rateMatrix:
+    - [ -, c1, x1, x2 ]
+    - [ c2, -, x3, x4 ]
+    - [ x1, x2, -, c1 ]
+    - [ x3, x4, c2, - ]
+
+
+- name: M0.free
+  reversible: true
+  numStates: 61
+  # BQM: Don't use geneticCode, instead use forData
+  #geneticCode: NCBI
+  forData: Codon2
+  parameters:
+  - name: w
+    description: dN/dS rate ratio
+    range:[ 0.0001, 1.0 ]
+  - name: k
+    description: Ts/Tv rate ratio
+  - name: f[1..61]
+    description: Codon state frequency
+    type: frequency  #this needs to be more specific!
+  rateMatrix:  
+  # JB: This will need to be big; maybe read from another file?
+  # BQM: better specifying everything here!
+    - [   -, k*f[2], w*f[3], k*w*f[4],  … (61)]
+    - [ k*f[1],   -, w*f[3],  w*f[4],  … (61)]
+    - [ w*f[1], w*f[2],   -,  0.0,  … (61)]
+    - [ w*f[1], w*f[2], k*f[3],    -,  … (61)]
+    -  …
+    - [(61),   0,   0,    0,  … (61)]
+
+
+- name: M0.wfixed
+  fromModel: M0.free
+  constraints:
+  - w = 1.0
+
+### RaMoSS model of Jones et al., 2018 ### 
+
+- name: CLM3a
+  description: Covarion-like Model 3
+  citation: “Jones et al., 2016”
+  reversible: true
+  #geneticCode: NCBI2
+  forData: Codon2
+  parameters:
+  # BQM: no need to do this
+  #- using: [M0.free, M0.fixed]
+  - name: d
+    description: covarion switching rate
+    range:[ 0.0001, 10.0 ]
+  - name: [ pM0, pM0fixed ]
+    type: frequency  # make sum=1.0
+  covarion:  
+  - fromModel: M0.free
+  - name: XXX
+  - name: YYY
+  - fromModel: M0.fixed
+
+
+### RaMoSS model of Jones et al., 2018 ### 
+- name: RaMoSS
+  description: Covarion-like Model 3
+  citation: “Jones et al., 2018”
+  reversible: true
+  forData: Codon2
+  mixture:
+  - fromModel: M0.free
+    weight: w1
+  - fromModel: M0.fixed
+    weight: w2
+  - fromModel: CLM3a
+    weight: w3
+ 
+  # BQM: This mixture model has 3 components with different Q matrix sizes??

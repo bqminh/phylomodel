@@ -101,9 +101,11 @@ Next we define new models with the following basic syntax:
 # definition of models in YAML format
 substitutionModels:
 - name:         # model name string
-  fullName: ""  # full model name string
-  citation: ""  # citation string
-  numStates:    # number of states
+  description:  # model description
+  citation:     # citation string
+  DOI:          # DOI for the publication (optional)
+  forData:      # for which kind of data type? (optional)
+  numStates:    # number of states (optional)
   reversible:   # boolean value (yes, true, no, false)
 
   parameters:   # list of all parameters
@@ -111,14 +113,17 @@ substitutionModels:
     range:      # vector of 2 elements for lower and upper bound
     initValue:  # initial values
     type:       # type of parameter (examples below)
-  - name:       # another parameter names
+  - name: x[1..3] # parameters intepreted as x[1], x[2] and x[3]
     ....
+
+  constraints:  # defining constraints for parameters
+    
 
   rateMatrix:   # specification for rate matrix Q
   - [ q11, q12, q13 ]
   - [ q21, q22, q23 ]
   - [ q31, q32, q33 ]
-  stateFrequency: [ f1, f2, f3 ] # specification for state frequency vector
+  stateFrequency: [ f1, f2, f3 ] # specification for state frequency
 ```
 
 Examples for GTR model:
@@ -128,7 +133,7 @@ substitutionModels:
 
 ### GTR model ###
 - name: GTR
-  fullName: “General time reversible”
+  description: “General time reversible”
   citation: “Tavare, 1986”
   reversible: true
   parameters:
@@ -151,31 +156,39 @@ See [sub-folder `substmodels`](substmodels) for definition of substitution model
 
 ### Mixture models
 
+For defining mixture models, one should add a `mixture: ` section as follows:
+
 ```yaml
 substitutionModels:
 
 - name: JC+GTR
+  description: "Mixture of JC and GTR"
   parameters:
   - name: w[1, 2]
-    type: weight # sum to 1.0
-  mixture:
-  - name: JC
-    weight: w[1]
-    scale: 1.0
-  - name: GTR
+    type: weight   # type weight implies that w[1]+w[2]=1.0
+  mixture:         # mixture components defined in this section
+  - fromModel: JC  # 1st component from JC model
+    weight: w[1]   # weight parameter
+    scale: 1.0     # scaling factor of Q matrix for this component
+  - fromModel: GTR # 2nd component from GTR model
     weight: w[2]
     scale: 1.0
 ```
 
 ### Covarion models
 
+For defining covarion models, one should add a `covarion: ` section as the following example:
+
 ```yaml
 substitutionModels:
 
 - name: COV_GTR
+  description: "Covarion model switching between invariant and GTR"
   parameters:
   - name: [ s0, s1 ] # switching rate
     range: [ 0.0001, 100 ]
+    
+  # definition for a covarion model [ [off,off2on], [on2off,GTR] ]  
   covarion:
   - name: off
     rateMatrix:
@@ -195,5 +208,14 @@ substitutionModels:
     - [  0, s1,  0,  0 ]
     - [  0,  0, s1,  0 ]
     - [  0,  0,  0, s1 ]
-  - name: GTR
+  - fromModel: GTR  # last part copied from GTR model
 ```
+
+See [more advanced covarion codon models by Bielawski](substmodels/bielawski.yml).
+
+## Remarks
+
+* How to link parameters between mixture components? Default: linked.
+* Binning of states?
+* For expression of rate matrices, which operators should be supported: multiplication, addition, subtraction, division. What about brackets?
+
