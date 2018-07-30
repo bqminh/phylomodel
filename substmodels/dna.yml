@@ -7,7 +7,7 @@ substitutionModels:
 
 ### JC model ###
 - name: JC
-  fullName: Jukes-Cantor
+  description: Jukes-Cantor model
   citation: “Jukes and Cantor, 1969”
   reversible: true
   stateFrequency: [ 0.25, 0.25, 0.25, 0.25 ]
@@ -19,7 +19,7 @@ substitutionModels:
 
 ### GTR model ###
 - name: GTR
-  fullName: “General time reversible”
+  description: “General time reversible”
   citation: “Tavare, 1986”
   reversible: true
   parameters:
