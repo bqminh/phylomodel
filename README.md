@@ -7,16 +7,16 @@ Introduction
 
 Model-based phylogenetic analyses using maximum likelihood (ML) and Bayesian inference (BI) are commonly used nowadays to reconstruct evolutionary histories among organisms. With the advent of phylogenomic (e.g. multi-gene) data, simple models of sequence evolution are likely mis-specified. Such model misspecification may lead to systematic errors in phylogenetic inference. 
 
-Many complex and realistic models of sequence evolution have been introduced, including partition, mixture and covarion models. However, many of them remain by and large not applicable due to difficulty of implementation in widely used phylogenetic software. There exist "complicated" language such as HyPhy and RevBayes, which allow to specify complex models but require significant amount of learning. 
+Many complex and realistic models of sequence evolution have been introduced, including partition, mixture and covarion models. However, many of them remain by and large not applicable due to difficulty of implementation in widely used phylogenetic software. There exist "complicated" languages such as HyPhy and RevBayes, which allow to specify complex models but require significant amount of learning. 
 
-This proposal aims to develop a specification format allowing users to easily define new phylogenetic models. Such format can be loaded and shared between different platforms and phylogenetic software. Thus, Thus, this take advantage of all machineries already available in ML/BI software such as model parameter estimation, tree search, bootstrapping. 
+This proposal aims to develop a specification format allowing users to easily define new phylogenetic models. Such format can be loaded and shared between different platforms and phylogenetic software. Thus, this take advantage of all machineries already available in ML/BI software such as model parameter estimation, tree search, bootstrapping. 
 
 ### Design principles
 
 To achieve this aim our design principles for this format are:
 
 * Simple: The format should be simple, human-readable and require little learning. 
-* Portable: It should be easily exchangeable between different platform and software. 
+* Portable: It should be easily exchangeable between different platforms and software. 
 * Sufficiently flexible: It allows to specify complex models without much sacrifice for simplicity. 
 
 In a short-term we would like to achieve the following goals:
