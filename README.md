@@ -57,38 +57,37 @@ Inspired by the Nexus format, the syntax for defining new data types looks like:
 ```yaml
 ---
 # definition of datatypes in YAML format
-dataTypes:
-- name:         # data type name
-  alias: [  ]   # vector of aliases for datatype name
-  states: [ ]   # vector of ordered states for the alphabet
+- datatype:     # data type name
+  state: [ ]    # vector of ordered states for the alphabet
   missing: [ ]  # vector of states for missing character
   gap: [ - ]    # gap symbols
   equate:       # list of ambiguous characters
-  - from:       # source state
-    to: [  ]    # vector of mapped states
+  - X: [ ]      # map from a state to list of states
         
-# next entry start with '- name: XXX'
+# next entry start with '- datatype: XXX'
 ```
 
 Below is an example for defining DNA data:
 
 ```yaml
 ---
-dataTypes:
 #### definition for DNA data ###
-- name: Nucleotide
-  alias: [ NT, DNA, RNA ]
-  states: [ A, C, G, T ]
-  missing: [ N, ? ]
-  gap: [ - ]
+- datatype: DNA
+  state: [ A, C, G, T ]
+  missing: [ N, "?" ]
+  gap: "-"
   equate:
-  - from: U
-    to: [ T ]
-  - from: R
-    to: [ A, G ]
-    .....
-  - from: V
-    to: [ A, G, C ]
+    U: T      # T and U are the same
+    R: [A, G] # R is interpreted as A or G
+    Y: [C, T]
+    W: [A, T]
+    S: [G, C]
+    M: [A, C]
+    K: [G, T]
+    B: [C, G, T]
+    H: [A, C, T]
+    D: [A, G, T]
+    V: [A, G, C]
 ```
 
 See [a specification file for basic data types](datatypes/basicdata.yml) (e.g., DNA, protein, codon).
