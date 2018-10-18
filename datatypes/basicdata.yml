@@ -73,13 +73,6 @@
   gap: [ *NTgap, *NTgap, *NTgap ]
   translate: KNKNTTTT*S*SMIMIQHQHPPPPRRRRLLLLEDEDAAAAGGGGVVVV*Y*YSSSSWCWCLFLF
 
-### Codon data with Vertebrate Mitochondrial code ###
-- datatype: CODON2
-  state: [ *Nucleotide, *Nucleotide, *Nucleotide ]  # reference to Nucleotide
-  missing: [ *NTmissing, *NTmissing, *NTmissing ]
-  gap: [ *NTgap, *NTgap, *NTgap ]
-  translate: KNKNTTTT*S*SMIMIQHQHPPPPRRRRLLLLEDEDAAAAGGGGVVVV*Y*YSSSSWCWCLFLF
-
 ### Codon data with Yeast Mitochondrial code ###
 - datatype: CODON3
   state: [ *Nucleotide, *Nucleotide, *Nucleotide ]  # reference to Nucleotide

@@ -62,7 +62,7 @@ Inspired by the Nexus format, the syntax for defining new data types looks like:
   missing: [ ]  # vector of states for missing character
   gap: [ - ]    # gap symbols
   equate:       # list of ambiguous characters
-  - X: [ ]      # map from a state to list of states
+    X: [ ]      # map from a state to list of states
         
 # next entry start with '- datatype: XXX'
 ```
